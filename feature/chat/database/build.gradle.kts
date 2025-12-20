@@ -5,12 +5,12 @@ plugins {
 }
 
 kotlin {
-
+    jvm()
     // Target declarations - add or remove as needed below. These define
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "br.com.cpcjrdev.core.presentantion"
+        namespace = "br.com.cpcjrdev.chat.database"
         compileSdk = 36
         minSdk = 24
 
@@ -31,7 +31,7 @@ kotlin {
     // A step-by-step guide on how to include this library in an XCode
     // project can be found here:
     // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "core:presentantionKit"
+    val xcfName = "featrure:chat:databaseKit"
 
     iosX64 {
         binaries.framework {
@@ -64,25 +64,11 @@ kotlin {
             }
         }
 
-        commonTest {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
-        }
-
         androidMain {
             dependencies {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
-            }
-        }
-
-        getByName("androidDeviceTest") {
-            dependencies {
-                implementation(libs.androidx.runner)
-                implementation(libs.androidx.test.core)
-                implementation(libs.androidx.junit)
             }
         }
 
@@ -96,5 +82,4 @@ kotlin {
             }
         }
     }
-
 }
