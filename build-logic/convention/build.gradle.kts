@@ -11,6 +11,10 @@ dependencies {
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
+    compileOnly(libs.androidx.room.gradle.plugin)
+    implementation(libs.buildkonfig.gradlePlugin)
+    implementation(libs.buildkonfig.compiler)
 }
 
 java {
@@ -56,6 +60,14 @@ gradlePlugin {
         register("cmpFeature") {
             id = "br.com.cpcjrdev.convention.cmp.feature"
             implementationClass = "CmpFeatureConventionPlugin"
+        }
+        register("buildKonfig") {
+            id = "br.com.cpcjrdev.convention.buildkonfig"
+            implementationClass = "BuildKonfigConventionPlugin"
+        }
+        register("room") {
+            id = "br.com.cpcjrdev.convention.room"
+            implementationClass = "RoomConventionPlugin"
         }
     }
 }

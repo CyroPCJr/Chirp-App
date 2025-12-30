@@ -1,5 +1,6 @@
 import br.com.cpcjrdev.chirp.convention.configureAndroidTarget
 import br.com.cpcjrdev.chirp.convention.configureIosTargets
+import br.com.cpcjrdev.chirp.convention.configureJvmTarget
 import br.com.cpcjrdev.chirp.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -15,6 +16,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.compose")
             }
 
+            configureJvmTarget()
             configureAndroidTarget()
             configureIosTargets()
 
