@@ -16,6 +16,7 @@ compose-multiplatform = "1.9.3"
 compose-lifecycle = "2.9.6"
 navigation-compose = "2.9.1"
 jetbrains-core-bundle = "1.0.1"
+material-icons = "1.7.3"
 
 # AndroidX
 androidx-activity = "1.12.2"
@@ -40,7 +41,7 @@ sqlite = "2.6.2"
 datastore = "1.2.0"
 firebase-bom = "34.7.0"
 adaptive = "1.2.0"
-compose-jetbrains = "1.9.3"
+compose-jetbrains = "1.9.0"
 jetbrains-savedstate = "1.4.0"
 coil = "3.3.0"
 coil-network = "3.3.0"
@@ -89,6 +90,11 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 # Compose
 jetbrains-compose-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose-multiplatform" }
 jetbrains-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
+jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-jetbrains" }
+jetbrains-compose-material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "material-icons" }
+jetbrains-compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "material-icons" }
+jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-jetbrains" }
+jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-jetbrains" }
 
 # Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -141,6 +147,8 @@ compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compile
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 androidx-room-gradle-plugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+buildkonfig-gradlePlugin = { group = "com.codingfeline.buildkonfig", name = "buildkonfig-gradle-plugin", version.ref = "buildkonfig" }
+buildkonfig-compiler = { group = "com.codingfeline.buildkonfig", name = "buildkonfig-compiler", version.ref = "buildkonfig" }
 
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -156,6 +164,14 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
 [plugins]
+convention-android-application = { id = "br.com.cpcjrdev.convention.android.application", version = "unspecified" }
+convention-android-application-compose = { id = "br.com.cpcjrdev.convention.android.application.compose", version = "unspecified" }
+convention-cmp-application = { id = "br.com.cpcjrdev.convention.cmp.application", version = "unspecified" }
+convention-kmp-library = { id = "br.com.cpcjrdev.convention.kmp.library", version = "unspecified" }
+convention-cmp-library = { id = "br.com.cpcjrdev.convention.cmp.library", version = "unspecified" }
+convention-cmp-feature = { id = "br.com.cpcjrdev.convention.cmp.feature", version = "unspecified" }
+convention-buildkonfig = { id = "br.com.cpcjrdev.convention.buildkonfig", version = "unspecified" }
+convention-room = { id = "br.com.cpcjrdev.convention.room", version = "unspecified" }
 
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }
