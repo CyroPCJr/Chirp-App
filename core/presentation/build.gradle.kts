@@ -16,6 +16,9 @@ kotlin {
 
                 implementation(compose.components.resources)
                 implementation(libs.material3.adaptive)
+
+                implementation(libs.jetbrains.lifecycle.compose)
+                implementation(libs.jetbrains.lifecycle.viewmodel)
             }
         }
 
