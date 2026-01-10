@@ -19,6 +19,7 @@ import br.com.cpcjrdev.core.designsystem.components.layouts.ChirpSnackbarScaffol
 import br.com.cpcjrdev.core.designsystem.components.textfields.ChirpPasswordTextField
 import br.com.cpcjrdev.core.designsystem.components.textfields.ChirpTextField
 import br.com.cpcjrdev.core.designsystem.theme.ChirpTheme
+import br.com.cpcjrdev.core.presentantion.util.ObserveAsEvents
 import chirp.feature.auth.presentation.generated.resources.Res
 import chirp.feature.auth.presentation.generated.resources.email
 import chirp.feature.auth.presentation.generated.resources.email_placeholder
@@ -34,10 +35,20 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun RegisterRoot(viewModel: RegisterViewModel = viewModel()) {
+fun RegisterRoot(
+    viewModel: RegisterViewModel = viewModel(),
+    onRegisterSuccess: (String) -> Unit,
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
     val snackbarHostState = remember { SnackbarHostState() }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is RegisterEvent.Success -> {
+                onRegisterSuccess(event.email)
+            }
+        }
+    }
 
     RegisterScreen(
         state = state,
