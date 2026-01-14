@@ -1,5 +1,6 @@
 package br.com.cpcjrdev.auth.presentantion.register
 
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.cpcjrdev.auth.domain.EmailValidator
@@ -18,6 +19,10 @@ import chirp.feature.auth.presentation.generated.resources.error_invalid_usernam
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -36,7 +41,7 @@ class RegisterViewModel(
         _state
             .onStart {
                 if (!hasLoadedInitialData) {
-                    /** Load initial data here **/
+                    observeValidationStates()
                     hasLoadedInitialData = true
                 }
             }.stateIn(
@@ -44,6 +49,48 @@ class RegisterViewModel(
                 started = SharingStarted.WhileSubscribed(5_000L),
                 initialValue = RegisterState(),
             )
+
+    private val isEmailValidFlow =
+        snapshotFlow {
+            state.value.emailTextState.text
+                .toString()
+        }.map { email -> EmailValidator.validate(email) }
+            .distinctUntilChanged()
+
+    private val isUsernameValidFlow =
+        snapshotFlow {
+            state.value.usernameTextState.text
+                .toString()
+        }.map { username -> username.length in 3..20 }
+            .distinctUntilChanged()
+
+    private val isPasswordValidFlow =
+        snapshotFlow {
+            state.value.passwordTextState.text
+                .toString()
+        }.map { password -> PasswordValidator.validate(password).isValidPassword }
+            .distinctUntilChanged()
+
+    private val isRegisteringFlow =
+        state
+            .map { it.isRegistering }
+            .distinctUntilChanged()
+
+    private fun observeValidationStates() {
+        combine(
+            isEmailValidFlow,
+            isUsernameValidFlow,
+            isPasswordValidFlow,
+            isRegisteringFlow,
+        ) { isEmailValid, isUsernameValid, isPasswordValid, isRegistering ->
+            val allValid = isEmailValid && isUsernameValid && isPasswordValid
+            _state.update {
+                it.copy(
+                    canRegister = !isRegistering && allValid,
+                )
+            }
+        }.launchIn(viewModelScope)
+    }
 
     fun onAction(action: RegisterAction) {
         when (action) {
@@ -70,7 +117,7 @@ class RegisterViewModel(
     }
 
     private fun register() {
-        if (validateFormInputs()) {
+        if (!validateFormInputs()) {
             return
         }
 

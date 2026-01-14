@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.cpcjrdev.core.designsystem.components.brand.ChirpBrandLogo
 import br.com.cpcjrdev.core.designsystem.components.buttons.ChirpButton
 import br.com.cpcjrdev.core.designsystem.components.buttons.ChirpButtonStyle
@@ -33,10 +32,11 @@ import chirp.feature.auth.presentation.generated.resources.username_placeholder
 import chirp.feature.auth.presentation.generated.resources.welcome_to_chirp
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RegisterRoot(
-    viewModel: RegisterViewModel = viewModel(),
+    viewModel: RegisterViewModel = koinViewModel(),
     onRegisterSuccess: (String) -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
