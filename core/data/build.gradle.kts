@@ -17,6 +17,7 @@ kotlin {
                 implementation(projects.core.domain)
                 implementation(libs.bundles.ktor.common)
                 implementation(libs.touchlab.kermit)
+                implementation(libs.koin.core)
             }
         }
 
@@ -29,6 +30,12 @@ kotlin {
         iosMain {
             dependencies {
                 implementation(libs.ktor.client.darwin)
+            }
+        }
+
+        jvmMain {
+            dependencies {
+                implementation(libs.ktor.client.okhttp)
             }
         }
     }
