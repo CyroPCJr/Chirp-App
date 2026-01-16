@@ -1,12 +1,12 @@
 package br.com.cpcjrdev.chirp.convention
 
-import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
-internal fun Project.configureAndroidCompose(commonExtension: CommonExtension<*, *, *, *, *, *>) {
-    with(commonExtension) {
-        buildFeatures {
+internal fun Project.configureAndroidCompose(applicationExtension: ApplicationExtension) {
+    applicationExtension.apply {
+        buildFeatures.apply {
             compose = true
         }
 
