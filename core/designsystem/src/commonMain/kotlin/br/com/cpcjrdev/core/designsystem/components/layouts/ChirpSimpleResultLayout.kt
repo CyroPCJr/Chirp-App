@@ -21,7 +21,7 @@ import br.com.cpcjrdev.core.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpSimpleSuccessLayout(
+fun ChirpSimpleResultLayout(
     title: String,
     description: String,
     icon: @Composable () -> Unit,
@@ -87,7 +87,7 @@ fun ChirpSimpleSuccessLayout(
 @Preview
 fun ChirpSimpleSuccessLayoutPreview() {
     ChirpTheme(darkTheme = true) {
-        ChirpSimpleSuccessLayout(
+        ChirpSimpleResultLayout(
             title = "Hello world!",
             description = "Test description",
             icon = {

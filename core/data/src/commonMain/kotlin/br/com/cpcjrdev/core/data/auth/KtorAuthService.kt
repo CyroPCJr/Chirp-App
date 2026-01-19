@@ -2,6 +2,7 @@ package br.com.cpcjrdev.core.data.auth
 
 import br.com.cpcjrdev.core.data.dto.requests.EmailRequest
 import br.com.cpcjrdev.core.data.dto.requests.RegisterRequest
+import br.com.cpcjrdev.core.data.networking.get
 import br.com.cpcjrdev.core.data.networking.post
 import br.com.cpcjrdev.core.domain.auth.AuthService
 import br.com.cpcjrdev.core.domain.util.DataError
@@ -30,5 +31,11 @@ class KtorAuthService(
         httpClient.post(
             route = "/auth/resend-verification",
             body = EmailRequest(email),
+        )
+
+    override suspend fun verifyEmail(token: String): EmptyResult<DataError.Remote> =
+        httpClient.get(
+            route = "/auth/verify",
+            queryParams = mapOf("token" to token),
         )
 }
