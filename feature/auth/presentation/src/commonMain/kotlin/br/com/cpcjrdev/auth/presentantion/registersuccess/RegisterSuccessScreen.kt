@@ -11,7 +11,7 @@ import br.com.cpcjrdev.core.designsystem.components.brand.ChirpSuccessIcon
 import br.com.cpcjrdev.core.designsystem.components.buttons.ChirpButton
 import br.com.cpcjrdev.core.designsystem.components.buttons.ChirpButtonStyle
 import br.com.cpcjrdev.core.designsystem.components.layouts.ChirpAdaptiveResultLayout
-import br.com.cpcjrdev.core.designsystem.components.layouts.ChirpSimpleSuccessLayout
+import br.com.cpcjrdev.core.designsystem.components.layouts.ChirpSimpleResultLayout
 import br.com.cpcjrdev.core.designsystem.components.layouts.ChirpSnackbarScaffold
 import br.com.cpcjrdev.core.designsystem.theme.ChirpTheme
 import br.com.cpcjrdev.core.presentantion.util.ObserveAsEvents
@@ -62,7 +62,7 @@ fun RegisterSuccessScreen(
         snackbarHostState = snackbarHostState,
     ) {
         ChirpAdaptiveResultLayout {
-            ChirpSimpleSuccessLayout(
+            ChirpSimpleResultLayout(
                 title = stringResource(Res.string.account_successfully_created),
                 description =
                     stringResource(

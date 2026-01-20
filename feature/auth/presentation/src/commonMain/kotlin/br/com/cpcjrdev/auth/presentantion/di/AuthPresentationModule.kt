@@ -1,5 +1,6 @@
 package br.com.cpcjrdev.auth.presentantion.di
 
+import br.com.cpcjrdev.auth.presentantion.emailverification.EmailVerificationViewModel
 import br.com.cpcjrdev.auth.presentantion.register.RegisterViewModel
 import br.com.cpcjrdev.auth.presentantion.registersuccess.RegisterSuccessViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -9,4 +10,5 @@ val authPresentationModule =
     module {
         viewModelOf(::RegisterViewModel)
         viewModelOf(::RegisterSuccessViewModel)
+        viewModelOf(::EmailVerificationViewModel)
     }
