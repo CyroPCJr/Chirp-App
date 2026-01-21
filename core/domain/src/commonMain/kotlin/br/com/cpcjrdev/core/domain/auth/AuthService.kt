@@ -2,8 +2,14 @@ package br.com.cpcjrdev.core.domain.auth
 
 import br.com.cpcjrdev.core.domain.util.DataError
 import br.com.cpcjrdev.core.domain.util.EmptyResult
+import br.com.cpcjrdev.core.domain.util.Result
 
 interface AuthService {
+    suspend fun login(
+        email: String,
+        password: String,
+    ): Result<AuthInfo, DataError.Remote>
+
     suspend fun register(
         email: String,
         username: String,

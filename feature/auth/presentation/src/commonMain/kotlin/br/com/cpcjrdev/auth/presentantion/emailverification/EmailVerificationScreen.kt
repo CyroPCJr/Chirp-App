@@ -38,12 +38,22 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EmailVerificationRoot(viewModel: EmailVerificationViewModel = viewModel()) {
+fun EmailVerificationRoot(
+    viewModel: EmailVerificationViewModel = viewModel(),
+    onLoginClick: () -> Unit,
+    onCloseClick: () -> Unit,
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     EmailVerificationScreen(
         state = state,
-        onAction = viewModel::onAction,
+        onAction = { action ->
+            when (action) {
+                EmailVerificationAction.OnCloseClick -> onCloseClick()
+                EmailVerificationAction.OnLoginClick -> onLoginClick()
+            }
+            viewModel.onAction(action)
+        },
     )
 }
 
