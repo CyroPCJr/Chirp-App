@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.cpcjrdev.auth.domain.EmailValidator
 import br.com.cpcjrdev.core.domain.auth.AuthService
+import br.com.cpcjrdev.core.domain.auth.SessionStorage
 import br.com.cpcjrdev.core.domain.util.DataError
 import br.com.cpcjrdev.core.domain.util.onFailure
 import br.com.cpcjrdev.core.domain.util.onSuccess
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val authService: AuthService,
+    private val sessionStorage: SessionStorage,
 ) : ViewModel() {
     private var hasLoadedInitialData = false
 
@@ -124,6 +126,7 @@ class LoginViewModel(
                     email = email,
                     password = password,
                 ).onSuccess { authInfo ->
+                    sessionStorage.set(authInfo)
                     _state.update {
                         it.copy(
                             isLoggingIn = false,
