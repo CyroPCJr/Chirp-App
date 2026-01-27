@@ -10,10 +10,13 @@ import br.com.cpcjrdev.chat.presentantion.chatlist.ChatListRoute
 import br.com.cpcjrdev.chat.presentantion.chatlist.ChatListScreenRoot
 
 @Composable
-fun NavigationRoot(navController: NavHostController) {
+fun NavigationRoot(
+    navController: NavHostController,
+    startDestination: Any,
+) {
     NavHost(
         navController = navController,
-        startDestination = AuthGraphRoutes.Graph,
+        startDestination = startDestination,
     ) {
         authGraph(
             navController = navController,
