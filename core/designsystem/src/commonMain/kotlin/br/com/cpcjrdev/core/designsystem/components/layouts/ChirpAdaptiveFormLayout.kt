@@ -30,6 +30,7 @@ import br.com.cpcjrdev.core.designsystem.components.brand.ChirpBrandLogo
 import br.com.cpcjrdev.core.designsystem.theme.ChirpTheme
 import br.com.cpcjrdev.core.designsystem.theme.extended
 import br.com.cpcjrdev.core.presentantion.util.DeviceConfiguration
+import br.com.cpcjrdev.core.presentantion.util.clearFocusOnTap
 import br.com.cpcjrdev.core.presentantion.util.currentDeviceConfiguration
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -54,6 +55,7 @@ fun ChirpAdaptiveFormLayout(
             ChirpSurface(
                 modifier =
                     modifier
+                        .clearFocusOnTap()
                         .consumeWindowInsets(WindowInsets.navigationBars)
                         .consumeWindowInsets(WindowInsets.displayCutout),
                 header = {

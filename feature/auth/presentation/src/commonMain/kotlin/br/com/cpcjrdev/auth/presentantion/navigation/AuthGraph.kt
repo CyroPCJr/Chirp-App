@@ -10,6 +10,7 @@ import br.com.cpcjrdev.auth.presentantion.forgotpassword.ForgotPasswordRoot
 import br.com.cpcjrdev.auth.presentantion.login.LoginRoot
 import br.com.cpcjrdev.auth.presentantion.register.RegisterRoot
 import br.com.cpcjrdev.auth.presentantion.registersuccess.RegisterSuccessRoot
+import br.com.cpcjrdev.auth.presentantion.resetpassword.ResetPasswordRoot
 
 fun NavGraphBuilder.authGraph(
     navController: NavController,
@@ -92,6 +93,18 @@ fun NavGraphBuilder.authGraph(
         }
         composable<AuthGraphRoutes.ForgotPassword> {
             ForgotPasswordRoot()
+        }
+        composable<AuthGraphRoutes.ResetPassword>(
+            deepLinks = listOf(
+                navDeepLink {
+                    this.uriPattern = "https://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                },
+                navDeepLink {
+                    this.uriPattern = "chirp://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                },
+            )
+        ) {
+            ResetPasswordRoot()
         }
     }
 }
