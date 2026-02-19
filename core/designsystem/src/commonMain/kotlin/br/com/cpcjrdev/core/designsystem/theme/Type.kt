@@ -1,5 +1,6 @@
 package br.com.cpcjrdev.core.designsystem.theme
 
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -58,7 +59,7 @@ val Typography.titleXSmall: TextStyle
 
 val Typography
     @Composable get() =
-        androidx.compose.material3.Typography(
+        Typography(
             titleLarge =
                 TextStyle(
                     fontFamily = PlusJakartaSans,
