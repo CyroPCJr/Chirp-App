@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import br.com.cpcjrdev.auth.presentantion.navigation.AuthGraphRoutes
-import br.com.cpcjrdev.chat.presentantion.chatlist.ChatListRoute
 import br.com.cpcjrdev.chat.presentantion.navigation.ChatGraphRoutes
 import br.com.cpcjrdev.chirp.navigation.DeepLinkListener
 import br.com.cpcjrdev.chirp.navigation.NavigationRoot

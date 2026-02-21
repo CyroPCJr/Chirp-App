@@ -1,8 +1,32 @@
 package br.com.cpcjrdev.chat.presentantion.chatlist
 
 import androidx.lifecycle.ViewModel
-import br.com.cpcjrdev.core.domain.auth.SessionStorage
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 
-class ChatListViewModel(
-    private val sessionStorage: SessionStorage,
-) : ViewModel()
+class ChatListViewModel : ViewModel() {
+    private var hasLoadedInitialData = false
+
+    private val _state = MutableStateFlow(ChatListState())
+    val state =
+        _state
+            .onStart {
+                if (!hasLoadedInitialData) {
+                    /** Load initial data here **/
+                    hasLoadedInitialData = true
+                }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = ChatListState(),
+            )
+
+    fun onAction(action: ChatListAction) {
+        when (action) {
+            else -> Unit
+        }
+    }
+}
