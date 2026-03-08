@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.cpcjrdev.chat.presentantion.chatlist.components.ChatListHeader
 import br.com.cpcjrdev.chat.presentantion.chatlist.components.ChatListItemUi
-import br.com.cpcjrdev.chat.presentantion.chatlist.components.EmptyChatSection
+import br.com.cpcjrdev.chat.presentantion.components.EmptyListSection
 import br.com.cpcjrdev.chat.presentantion.model.ChatUi
 import br.com.cpcjrdev.core.designsystem.components.brand.ChirpHorizontalDivider
 import br.com.cpcjrdev.core.designsystem.components.buttons.ChirpFloatingActionButton
@@ -40,6 +40,8 @@ import chirp.feature.chat.presentation.generated.resources.create_chat
 import chirp.feature.chat.presentation.generated.resources.do_you_want_to_logout
 import chirp.feature.chat.presentation.generated.resources.do_you_want_to_logout_desc
 import chirp.feature.chat.presentation.generated.resources.logout
+import chirp.feature.chat.presentation.generated.resources.no_chats
+import chirp.feature.chat.presentation.generated.resources.no_chats_subtitle
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -130,7 +132,9 @@ fun ChatListScreen(
                 }
 
                 state.chats.isEmpty() -> {
-                    EmptyChatSection(
+                    EmptyListSection(
+                        title = stringResource(Res.string.no_chats),
+                        description = stringResource(Res.string.no_chats_subtitle),
                         modifier =
                             Modifier
                                 .weight(1f)

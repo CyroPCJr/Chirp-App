@@ -22,6 +22,8 @@ enum class DeviceConfiguration {
     DESKTOP,
     ;
 
+    val isWideScreen: Boolean
+        get() = this in listOf(TABLET_LANDSCAPE, DESKTOP)
     val isMobile: Boolean
         get() = this in listOf(MOBILE_PORTRAIT, MOBILE_LANDSCAPE)
 

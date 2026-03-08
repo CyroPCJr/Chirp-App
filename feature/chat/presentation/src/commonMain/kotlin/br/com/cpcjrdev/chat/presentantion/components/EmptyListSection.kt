@@ -1,4 +1,4 @@
-package br.com.cpcjrdev.chat.presentantion.chatlist.components
+package br.com.cpcjrdev.chat.presentantion.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,13 +17,14 @@ import br.com.cpcjrdev.core.presentantion.util.DeviceConfiguration
 import br.com.cpcjrdev.core.presentantion.util.currentDeviceConfiguration
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.empty_chat
-import chirp.feature.chat.presentation.generated.resources.no_messages
-import chirp.feature.chat.presentation.generated.resources.no_messages_subtitle
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun EmptyChatSection(modifier: Modifier = Modifier) {
+fun EmptyListSection(
+    title: String,
+    description: String,
+    modifier: Modifier = Modifier,
+) {
     val configuration = currentDeviceConfiguration()
     Column(
         modifier = modifier,
@@ -32,7 +33,7 @@ fun EmptyChatSection(modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(Res.drawable.empty_chat),
-            contentDescription = stringResource(Res.string.no_messages),
+            contentDescription = title,
             modifier =
                 Modifier.size(
                     if (configuration == DeviceConfiguration.MOBILE_LANDSCAPE) {
@@ -44,12 +45,12 @@ fun EmptyChatSection(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = stringResource(Res.string.no_messages),
+            text = title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.extended.textPrimary,
         )
         Text(
-            text = stringResource(Res.string.no_messages_subtitle),
+            text = description,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.extended.textSecondary,
         )
