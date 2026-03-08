@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -42,78 +43,85 @@ import chirp.core.designsystem.generated.resources.Res as DesignSystemRes
 
 @Composable
 fun ChatDetailHeader(
-    chatUi: ChatUi,
+    chatUi: ChatUi?,
     isDetailPresent: Boolean,
     isChatOptionsDropDownOpen: Boolean,
     onChatOptionsClick: () -> Unit,
-    onDismissChatOptions: ()  -> Unit,
+    onDismissChatOptions: () -> Unit,
     onManageChatClick: () -> Unit,
     onLeaveChatClick: () -> Unit,
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val isGroupChat = chatUi.otherParticipants.size > 1
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colorScheme.surface
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        if(!isDetailPresent) {
+        if (!isDetailPresent) {
             ChirpIconButton(
-                onClick = onBackClick
+                onClick = onBackClick,
             ) {
                 Icon(
                     imageVector = vectorResource(DesignSystemRes.drawable.arrow_left_icon),
                     contentDescription = stringResource(Res.string.go_back),
                     modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.extended.textSecondary
+                    tint = MaterialTheme.colorScheme.extended.textSecondary,
                 )
             }
         }
 
-        ChatItemHeaderRow(
-            chat = chatUi,
-            isGroupChat = isGroupChat,
-            modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    onManageChatClick()
-                }
-        )
+        if (chatUi != null) {
+            val isGroupChat = chatUi.otherParticipants.size > 1
+            ChatItemHeaderRow(
+                chat = chatUi,
+                isGroupChat = isGroupChat,
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .clickable {
+                            onManageChatClick()
+                        },
+            )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
 
         Box {
             ChirpIconButton(
-                onClick = onChatOptionsClick
+                onClick = onChatOptionsClick,
             ) {
                 Icon(
                     imageVector = vectorResource(DesignSystemRes.drawable.dots_icon),
                     contentDescription = stringResource(Res.string.open_chat_options_menu),
                     modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.extended.textSecondary
+                    tint = MaterialTheme.colorScheme.extended.textSecondary,
                 )
             }
 
             ChirpDropDownMenu(
                 isOpen = isChatOptionsDropDownOpen,
                 onDismiss = onDismissChatOptions,
-                items = listOf(
-                    DropDownItem(
-                        title = stringResource(Res.string.chat_members),
-                        icon = vectorResource(Res.drawable.users_icon),
-                        contentColor = MaterialTheme.colorScheme.extended.textSecondary,
-                        onClick = onManageChatClick
+                items =
+                    listOf(
+                        DropDownItem(
+                            title = stringResource(Res.string.chat_members),
+                            icon = vectorResource(Res.drawable.users_icon),
+                            contentColor = MaterialTheme.colorScheme.extended.textSecondary,
+                            onClick = onManageChatClick,
+                        ),
+                        DropDownItem(
+                            title = stringResource(Res.string.leave_chat),
+                            icon = vectorResource(DesignSystemRes.drawable.log_out_icon),
+                            contentColor = MaterialTheme.colorScheme.extended.destructiveHover,
+                            onClick = onLeaveChatClick,
+                        ),
                     ),
-                    DropDownItem(
-                        title = stringResource(Res.string.leave_chat),
-                        icon = vectorResource(DesignSystemRes.drawable.log_out_icon),
-                        contentColor = MaterialTheme.colorScheme.extended.destructiveHover,
-                        onClick = onLeaveChatClick
-                    ),
-                )
             )
         }
     }

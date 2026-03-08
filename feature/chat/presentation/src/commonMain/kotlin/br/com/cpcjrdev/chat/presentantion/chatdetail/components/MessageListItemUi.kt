@@ -17,6 +17,7 @@ import br.com.cpcjrdev.chat.presentantion.model.MessageUi
 import br.com.cpcjrdev.chat.presentantion.model.MessageUi.DateSeparator
 import br.com.cpcjrdev.chat.presentantion.model.MessageUi.LocalUserMessage
 import br.com.cpcjrdev.chat.presentantion.model.MessageUi.OtherUserMessage
+import br.com.cpcjrdev.chat.presentantion.util.getChatBubbleColorForUser
 import br.com.cpcjrdev.core.designsystem.components.avatar.ChatParticipantUi
 import br.com.cpcjrdev.core.designsystem.theme.ChirpTheme
 import br.com.cpcjrdev.core.designsystem.theme.extended
@@ -56,6 +57,7 @@ fun MessageListItemUi(
             is OtherUserMessage -> {
                 OtherUserMessage(
                     message = messageUi,
+                    color = getChatBubbleColorForUser(messageUi.sender.id),
                 )
             }
         }
