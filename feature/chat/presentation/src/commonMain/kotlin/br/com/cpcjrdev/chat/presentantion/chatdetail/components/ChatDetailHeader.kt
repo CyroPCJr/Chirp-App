@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.cpcjrdev.chat.domain.models.ChatMessage
+import br.com.cpcjrdev.chat.domain.models.ChatMessageDeliveryStatus
 import br.com.cpcjrdev.chat.presentantion.components.ChatHeader
 import br.com.cpcjrdev.chat.presentantion.components.ChatItemHeaderRow
 import br.com.cpcjrdev.chat.presentantion.model.ChatUi
@@ -171,6 +172,7 @@ fun ChatDetailHeaderPreview() {
                                             "and goes over multiple lines to showcase the ellipsis",
                                     createdAt = Clock.System.now(),
                                     senderId = "1",
+                                    deliveryStatus = ChatMessageDeliveryStatus.SENT,
                                 ),
                             lastMessageSenderUsername = "Philipp",
                         ),

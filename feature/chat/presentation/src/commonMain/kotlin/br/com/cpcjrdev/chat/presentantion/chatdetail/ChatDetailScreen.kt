@@ -283,6 +283,7 @@ private fun ChatDetailMessagesPreview() {
                                             "and goes over multiple lines to showcase the ellipsis",
                                     createdAt = Clock.System.now(),
                                     senderId = "1",
+                                    deliveryStatus = ChatMessageDeliveryStatus.SENT
                                 ),
                             lastMessageSenderUsername = "Philipp",
                         ),
