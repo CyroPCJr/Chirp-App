@@ -7,7 +7,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.cpcjrdev.chat.domain.chat.ChatParticipantService
-import br.com.cpcjrdev.chat.domain.chat.ChatService
+import br.com.cpcjrdev.chat.domain.chat.ChatRepository
 import br.com.cpcjrdev.chat.presentantion.mappers.toUi
 import br.com.cpcjrdev.core.domain.util.DataError
 import br.com.cpcjrdev.core.domain.util.onFailure
@@ -32,7 +32,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
     private val chatParticipantService: ChatParticipantService,
-    private val chatService: ChatService,
+    private val chatRepository: ChatRepository,
 ) : ViewModel() {
     private var hasLoadedInitialData = false
 
@@ -93,7 +93,7 @@ class CreateChatViewModel(
                 )
             }
 
-            chatService
+            chatRepository
                 .createChat(userIds)
                 .onSuccess { chat ->
                     _state.update {

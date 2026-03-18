@@ -17,6 +17,16 @@ fun ChatMessageDto.toDomain(): ChatMessage =
         deliveryStatus = ChatMessageDeliveryStatus.SENT,
     )
 
+fun ChatMessageEntity.toDomain(): ChatMessage =
+    ChatMessage(
+        id = chatId,
+        chatId = chatId,
+        content = content,
+        createdAt = Instant.fromEpochMilliseconds(timestamp),
+        senderId = senderId,
+        deliveryStatus = ChatMessageDeliveryStatus.SENT,
+    )
+
 fun LastMessageView.toDomain(): ChatMessage =
     ChatMessage(
         id = messageId,

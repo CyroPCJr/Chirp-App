@@ -19,14 +19,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,6 +45,7 @@ import br.com.cpcjrdev.chat.presentantion.model.MessageUi
 import br.com.cpcjrdev.core.designsystem.components.avatar.ChatParticipantUi
 import br.com.cpcjrdev.core.designsystem.theme.ChirpTheme
 import br.com.cpcjrdev.core.designsystem.theme.extended
+import br.com.cpcjrdev.core.presentantion.util.ObserveAsEvents
 import br.com.cpcjrdev.core.presentantion.util.UiText
 import br.com.cpcjrdev.core.presentantion.util.clearFocusOnTap
 import br.com.cpcjrdev.core.presentantion.util.currentDeviceConfiguration
@@ -59,6 +64,19 @@ fun ChatDetailRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val snackbarState = remember { SnackbarHostState() }
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            ChatDetailEvent.OnChatLeft -> {
+                onBack()
+            }
+
+            is ChatDetailEvent.OnError -> {
+                snackbarState.showSnackbar(event.error.asStringAsync())
+            }
+        }
+    }
+
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
@@ -73,6 +91,7 @@ fun ChatDetailRoot(
     ChatDetailScreen(
         state = state,
         isDetailPresent = isDetailPresent,
+        snackbarState = snackbarState,
         onAction = viewModel::onAction,
     )
 }
@@ -81,6 +100,7 @@ fun ChatDetailRoot(
 fun ChatDetailScreen(
     state: ChatDetailState,
     isDetailPresent: Boolean,
+    snackbarState: SnackbarHostState,
     onAction: (ChatDetailAction) -> Unit,
 ) {
     val configuration = currentDeviceConfiguration()
@@ -97,6 +117,9 @@ fun ChatDetailScreen(
             } else {
                 MaterialTheme.colorScheme.extended.surfaceLower
             },
+        snackbarHost = {
+            SnackbarHost(snackbarState)
+        },
     ) { innerPadding ->
         Box(
             modifier =
@@ -178,7 +201,8 @@ fun ChatDetailScreen(
                             },
                             modifier =
                                 Modifier
-                                    .fillMaxWidth(),
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
                         )
                     }
                 }
@@ -190,17 +214,20 @@ fun ChatDetailScreen(
                 AnimatedVisibility(
                     visible = configuration.isWideScreen && state.chatUi != null,
                 ) {
-                    MessageBox(
-                        messageTextFieldState = state.messageTextFieldState,
-                        isTextInputEnabled = state.canSendMessage,
-                        connectionState = state.connectionState,
-                        onSendClick = {
-                            onAction(ChatDetailAction.OnSendMessageClick)
-                        },
-                        modifier =
-                            Modifier
-                                .fillMaxWidth(),
-                    )
+                    DynamicRoundedCornerColumn(isCornersRounded = configuration.isWideScreen) {
+                        MessageBox(
+                            messageTextFieldState = state.messageTextFieldState,
+                            isTextInputEnabled = state.canSendMessage,
+                            connectionState = state.connectionState,
+                            onSendClick = {
+                                onAction(ChatDetailAction.OnSendMessageClick)
+                            },
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }
@@ -217,8 +244,9 @@ private fun DynamicRoundedCornerColumn(
         modifier =
             modifier
                 .shadow(
-                    elevation = if (isCornersRounded) 4.dp else 0.dp,
-                    shape = if (isCornersRounded) RoundedCornerShape(16.dp) else RectangleShape,
+                    elevation = if (isCornersRounded) 8.dp else 0.dp,
+                    shape = if (isCornersRounded) RoundedCornerShape(24.dp) else RectangleShape,
+                    spotColor = Color.Black.copy(alpha = 0.2f),
                 ).background(
                     color = MaterialTheme.colorScheme.surface,
                     shape = if (isCornersRounded) RoundedCornerShape(16.dp) else RectangleShape,
@@ -236,6 +264,7 @@ private fun ChatDetailEmptyPreview() {
             state = ChatDetailState(),
             isDetailPresent = false,
             onAction = {},
+            snackbarState = remember { SnackbarHostState() },
         )
     }
 }
@@ -283,7 +312,7 @@ private fun ChatDetailMessagesPreview() {
                                             "and goes over multiple lines to showcase the ellipsis",
                                     createdAt = Clock.System.now(),
                                     senderId = "1",
-                                    deliveryStatus = ChatMessageDeliveryStatus.SENT
+                                    deliveryStatus = ChatMessageDeliveryStatus.SENT,
                                 ),
                             lastMessageSenderUsername = "Philipp",
                         ),
@@ -314,6 +343,7 @@ private fun ChatDetailMessagesPreview() {
                 ),
             isDetailPresent = true,
             onAction = {},
+            snackbarState = remember { SnackbarHostState() },
         )
     }
 }
