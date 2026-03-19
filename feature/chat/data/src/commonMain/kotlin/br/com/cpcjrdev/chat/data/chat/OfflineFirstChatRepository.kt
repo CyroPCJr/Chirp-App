@@ -11,6 +11,7 @@ import br.com.cpcjrdev.chat.domain.chat.ChatRepository
 import br.com.cpcjrdev.chat.domain.chat.ChatService
 import br.com.cpcjrdev.chat.domain.models.Chat
 import br.com.cpcjrdev.chat.domain.models.ChatInfo
+import br.com.cpcjrdev.chat.domain.models.ChatParticipant
 import br.com.cpcjrdev.core.domain.util.DataError
 import br.com.cpcjrdev.core.domain.util.EmptyResult
 import br.com.cpcjrdev.core.domain.util.Result
@@ -86,6 +87,13 @@ class OfflineFirstChatRepository(
                 )
             }.map { it.toDomain() }
 
+    override fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipant>> =
+        db.chatDao
+            .getActiveParticipantsByChatId(chatId)
+            .map { participants ->
+                participants.map { it.toDomain() }
+            }
+
     override suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote> =
         chatService
             .getChatById(chatId)
@@ -112,6 +120,21 @@ class OfflineFirstChatRepository(
 
     override suspend fun leaveChat(chatId: String): EmptyResult<DataError.Remote> =
         chatService.leaveChat(chatId).onSuccess { db.chatDao.deleteChatById(chatId) }
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>,
+    ): Result<Chat, DataError.Remote> =
+        chatService
+            .addParticipantsToChat(chatId, userIds)
+            .onSuccess { chat ->
+                db.chatDao.upsertChatWithParticipantsAndCrossRefs(
+                    chat = chat.toEntity(),
+                    participants = chat.participants.map { it.toEntity() },
+                    participantDao = db.chatParticipantDao,
+                    crossRefDao = db.chatParticipantsCrossRefDao,
+                )
+            }
 
     private suspend fun List<ChatParticipantEntity>.onlyActive(chatId: String): List<ChatParticipantEntity> {
         val activeParticipantIds =

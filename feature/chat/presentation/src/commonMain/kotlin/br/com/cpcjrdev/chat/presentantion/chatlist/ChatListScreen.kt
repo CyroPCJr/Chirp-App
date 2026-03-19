@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.cpcjrdev.chat.presentantion.chatlist.components.ChatListHeader
 import br.com.cpcjrdev.chat.presentantion.chatlist.components.ChatListItemUi
-import br.com.cpcjrdev.chat.presentantion.components.EmptyListSection
+import br.com.cpcjrdev.chat.presentantion.components.EmptySection
 import br.com.cpcjrdev.chat.presentantion.model.ChatUi
 import br.com.cpcjrdev.core.designsystem.components.brand.ChirpHorizontalDivider
 import br.com.cpcjrdev.core.designsystem.components.buttons.ChirpFloatingActionButton
@@ -132,7 +132,7 @@ fun ChatListScreen(
                 }
 
                 state.chats.isEmpty() -> {
-                    EmptyListSection(
+                    EmptySection(
                         title = stringResource(Res.string.no_chats),
                         description = stringResource(Res.string.no_chats_subtitle),
                         modifier =

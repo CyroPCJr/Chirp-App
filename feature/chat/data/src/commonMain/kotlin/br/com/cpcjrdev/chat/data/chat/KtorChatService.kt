@@ -2,6 +2,7 @@ package br.com.cpcjrdev.chat.data.chat
 
 import br.com.cpcjrdev.chat.data.dto.ChatDto
 import br.com.cpcjrdev.chat.data.dto.request.CreateChatRequest
+import br.com.cpcjrdev.chat.data.dto.request.ParticipantsRequest
 import br.com.cpcjrdev.chat.data.mappers.toDomain
 import br.com.cpcjrdev.chat.domain.chat.ChatService
 import br.com.cpcjrdev.chat.domain.models.Chat
@@ -47,4 +48,17 @@ class KtorChatService(
             .delete<Unit>(
                 route = "/chat/$chatId/leave",
             ).asEmptyResult()
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>,
+    ): Result<Chat, DataError.Remote> =
+        httpClient
+            .post<ParticipantsRequest, ChatDto>(
+                route = "/chat/$chatId/add",
+                body =
+                    ParticipantsRequest(
+                        userIds = userIds,
+                    ),
+            ).map { it.toDomain() }
 }
