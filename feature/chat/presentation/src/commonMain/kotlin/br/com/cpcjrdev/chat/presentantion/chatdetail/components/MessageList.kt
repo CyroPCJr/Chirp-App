@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.com.cpcjrdev.chat.presentantion.components.EmptyListSection
+import br.com.cpcjrdev.chat.presentantion.components.EmptySection
 import br.com.cpcjrdev.chat.presentantion.model.MessageUi
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.no_messages
@@ -36,7 +36,7 @@ fun MessageList(
                     .padding(vertical = 32.dp),
             contentAlignment = Alignment.Center,
         ) {
-            EmptyListSection(
+            EmptySection(
                 title = stringResource(Res.string.no_messages),
                 description = stringResource(Res.string.no_messages_subtitle),
             )

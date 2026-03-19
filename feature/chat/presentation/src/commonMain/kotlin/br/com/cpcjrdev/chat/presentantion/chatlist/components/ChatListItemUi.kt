@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import br.com.cpcjrdev.chat.domain.models.ChatMessage
+import br.com.cpcjrdev.chat.domain.models.ChatMessageDeliveryStatus
 import br.com.cpcjrdev.chat.presentantion.components.ChatItemHeaderRow
 import br.com.cpcjrdev.chat.presentantion.model.ChatUi
 import br.com.cpcjrdev.core.designsystem.components.avatar.ChatParticipantUi
@@ -140,6 +141,7 @@ fun ChatListItemUiPreview() {
                                     "and goes over multiple lines to showcase the ellipsis",
                             createdAt = Clock.System.now(),
                             senderId = "1",
+                            deliveryStatus = ChatMessageDeliveryStatus.SENT,
                         ),
                     lastMessageSenderUsername = "Philipp",
                 ),
