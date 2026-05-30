@@ -9,7 +9,7 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
+//            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.core.splashscreen)
@@ -33,12 +33,17 @@ kotlin {
             implementation(libs.jetbrains.compose.navigation)
             implementation(libs.bundles.koin.common)
 
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+//            implementation(compose.runtime)
+//            implementation(compose.foundation)
+//            implementation(compose.material3)
+//            implementation(compose.ui)
+//            implementation(compose.components.resources)
+//            implementation(compose.components.uiToolingPreview)
+//            implementation(compose.preview)
+
+//            implementation("org.jetbrains.compose.ui:ui-tooling-preview:1.10.0")
+            implementation(libs.jetbrains.compose.ui.tooling.preview)
+
             implementation(libs.jetbrains.compose.viewmodel)
             implementation(libs.jetbrains.lifecycle.compose)
         }

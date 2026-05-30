@@ -1,17 +1,17 @@
 [versions]
 # Build tools
-agp = "9.1.0"
-composeBom = "2026.03.00"
-kotlin = "2.3.20"
+agp = "9.2.1"
+composeBom = "2026.05.01"
+kotlin = "2.3.21"
 ksp = "2.3.6"
 google-services = "4.4.4"
 
 androidDesugarJdkLibs = "2.1.5"
-androidTools = "32.1.0"
+androidTools = "32.2.1"
 
 # Compose
-compose-hot-reload = "1.0.0"
-compose-multiplatform = "1.10.2"
+compose-hot-reload = "1.1.1"
+compose-multiplatform = "1.10.3"
 # Maintain compose multiplatform version aligned with navigation, cache error could happen
 compose-lifecycle = "2.9.6"
 navigation-compose = "2.9.2"
@@ -29,24 +29,24 @@ appcompatVersion = "1.7.1"
 core-splashscreen = "1.2.0"
 
 # Kotlinx
-kotlinx-coroutines = "1.10.2"
-kotlinx-serialization = "1.10.0"
-kotlinx-datetime = "0.7.1"
+kotlinx-coroutines = "1.11.0"
+kotlinx-serialization = "1.11.0"
+kotlinx-datetime = "0.8.0"
 
 # Third party
-koin = "4.2.0"
-ktor = "3.4.1"
+koin = "4.2.1"
+ktor = "3.5.0"
 room = "2.8.4"
 sqlite = "2.6.2"
 datastore = "1.2.1"
-firebase-bom = "34.10.0"
+firebase-bom = "34.13.0"
 adaptive = "1.2.0"
 compose-jetbrains = "1.9.0"
 jetbrains-savedstate = "1.4.0"
 coil = "3.4.0"
 coil-network = "3.4.0"
 moko = "0.20.1"
-buildkonfig = "0.17.1"
+buildkonfig = "0.21.2"
 kermit = "2.1.0"
 
 projectApplicationId = "com.plcoding.chirp"
@@ -90,6 +90,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 
 # Compose
 jetbrains-compose-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "compose-multiplatform" }
+jetbrains-compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform"}
 jetbrains-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-jetbrains" }
 jetbrains-compose-material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "material-icons" }
@@ -156,6 +157,7 @@ buildkonfig-compiler = { group = "com.codingfeline.buildkonfig", name = "buildko
 
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-jetbrains" }

@@ -23,9 +23,9 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                 configureKotlinAndroid(this)
 
                 resourcePrefix = this@with.pathToResourcePrefix()
-
+                androidResources.enable = true
                 // Required to make debug build of app run in iOS simulator
-                experimentalProperties["android.experimental.kmp.enableAndroidResources"] = "true"
+//                experimentalProperties["android.experimental.kmp.enableAndroidResources"] = "true"
             }
 
             dependencies {

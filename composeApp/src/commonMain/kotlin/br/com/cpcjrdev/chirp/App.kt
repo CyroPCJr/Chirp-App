@@ -3,6 +3,7 @@ package br.com.cpcjrdev.chirp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import br.com.cpcjrdev.auth.presentantion.navigation.AuthGraphRoutes
@@ -11,11 +12,10 @@ import br.com.cpcjrdev.chirp.navigation.DeepLinkListener
 import br.com.cpcjrdev.chirp.navigation.NavigationRoot
 import br.com.cpcjrdev.core.designsystem.theme.ChirpTheme
 import br.com.cpcjrdev.core.presentantion.util.ObserveAsEvents
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
-@Composable
 @Preview
+@Composable
 fun App(
     onAuthenticationChecked: () -> Unit = {},
     viewModel: MainViewModel = koinViewModel(),
