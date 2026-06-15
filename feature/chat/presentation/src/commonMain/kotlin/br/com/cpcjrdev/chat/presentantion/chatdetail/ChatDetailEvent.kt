@@ -8,4 +8,6 @@ sealed interface ChatDetailEvent {
     data class OnError(
         val error: UiText,
     ) : ChatDetailEvent
+
+    data object OnNewMessage: ChatDetailEvent
 }
