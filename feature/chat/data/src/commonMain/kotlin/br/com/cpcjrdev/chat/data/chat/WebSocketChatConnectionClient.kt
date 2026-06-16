@@ -10,15 +10,14 @@ import br.com.cpcjrdev.chat.data.network.KtorWebSocketConnector
 import br.com.cpcjrdev.chat.database.ChirpChatDatabase
 import br.com.cpcjrdev.chat.domain.chat.ChatConnectionClient
 import br.com.cpcjrdev.chat.domain.chat.ChatRepository
-import br.com.cpcjrdev.chat.domain.error.ConnectionError
 import br.com.cpcjrdev.chat.domain.message.MessageRepository
 import br.com.cpcjrdev.chat.domain.models.ChatMessage
 import br.com.cpcjrdev.chat.domain.models.ChatMessageDeliveryStatus
 import br.com.cpcjrdev.core.domain.auth.SessionStorage
+import br.com.cpcjrdev.core.domain.util.DataError
 import br.com.cpcjrdev.core.domain.util.EmptyResult
 import br.com.cpcjrdev.core.domain.util.onFailure
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
@@ -26,6 +25,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.serialization.json.Json
+import kotlin.onFailure
 
 class WebSocketChatConnectionClient(
     private val webSocketConnector: KtorWebSocketConnector,
@@ -35,7 +35,7 @@ class WebSocketChatConnectionClient(
     private val json: Json,
     private val messageRepository: MessageRepository,
     private val applicationScope: CoroutineScope,
-): ChatConnectionClient {
+) : ChatConnectionClient {
 
     override val chatMessages = webSocketConnector
         .messages
@@ -52,44 +52,30 @@ class WebSocketChatConnectionClient(
 
     override val connectionState = webSocketConnector.connectionState
 
-    override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<ConnectionError> {
-        val outgoingDto = message.toNewMessage()
-        val webSocketMessage = WebSocketMessageDto(
-            type = outgoingDto.type.name,
-            payload = json.encodeToString(outgoingDto)
-        )
-        val rawJsonPayload = json.encodeToString(webSocketMessage)
-
-        return webSocketConnector
-            .sendMessage(rawJsonPayload)
-            .onFailure { error ->
-                messageRepository.updateMessageDeliveryStatus(
-                    messageId = message.id,
-                    status = ChatMessageDeliveryStatus.FAILED
-                )
-            }
-    }
-
     private fun parseIncomingMessage(message: WebSocketMessageDto): IncomingWebSocketDto? {
-        return when(message.type) {
+        return when (message.type) {
             IncomingWebSocketType.NEW_MESSAGE.name -> {
                 json.decodeFromString<IncomingWebSocketDto.NewMessageDto>(message.payload)
             }
+
             IncomingWebSocketType.MESSAGE_DELETED.name -> {
                 json.decodeFromString<IncomingWebSocketDto.MessageDeletedDto>(message.payload)
             }
+
             IncomingWebSocketType.PROFILE_PICTURE_UPDATED.name -> {
                 json.decodeFromString<IncomingWebSocketDto.ProfilePictureUpdated>(message.payload)
             }
+
             IncomingWebSocketType.CHAT_PARTICIPANTS_CHANGED.name -> {
                 json.decodeFromString<IncomingWebSocketDto.ChatParticipantsChangedDto>(message.payload)
             }
+
             else -> null
         }
     }
 
     private suspend fun handleIncomingMessage(message: IncomingWebSocketDto) {
-        when(message) {
+        when (message) {
             is IncomingWebSocketDto.ChatParticipantsChangedDto -> refreshChat(message)
             is IncomingWebSocketDto.MessageDeletedDto -> deleteMessage(message)
             is IncomingWebSocketDto.NewMessageDto -> handleNewMessage(message)
@@ -107,7 +93,7 @@ class WebSocketChatConnectionClient(
 
     private suspend fun handleNewMessage(message: IncomingWebSocketDto.NewMessageDto) {
         val chatExists = database.chatDao.getChatById(message.chatId) != null
-        if(!chatExists) {
+        if (!chatExists) {
             chatRepository.fetchChatById(message.chatId)
         }
 
@@ -122,7 +108,7 @@ class WebSocketChatConnectionClient(
         )
 
         val authInfo = sessionStorage.observeAuthInfo().firstOrNull()
-        if(authInfo != null) {
+        if (authInfo != null) {
             sessionStorage.set(
                 info = authInfo.copy(
                     user = authInfo.user.copy(
