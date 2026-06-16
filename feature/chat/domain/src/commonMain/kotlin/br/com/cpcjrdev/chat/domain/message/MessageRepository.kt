@@ -3,6 +3,7 @@ package br.com.cpcjrdev.chat.domain.message
 import br.com.cpcjrdev.chat.domain.models.ChatMessage
 import br.com.cpcjrdev.chat.domain.models.ChatMessageDeliveryStatus
 import br.com.cpcjrdev.chat.domain.models.MessageWithSender
+import br.com.cpcjrdev.chat.domain.models.OutgoingNewMessage
 import br.com.cpcjrdev.core.domain.util.DataError
 import br.com.cpcjrdev.core.domain.util.EmptyResult
 import br.com.cpcjrdev.core.domain.util.Result
@@ -19,5 +20,6 @@ interface MessageRepository {
         before: String? = null
     ): Result<List<ChatMessage>, DataError>
 
+    suspend fun sendMessage(message: OutgoingNewMessage): EmptyResult<DataError>
     fun getMessagesForChat(chatId: String): Flow<List<MessageWithSender>>
 }
