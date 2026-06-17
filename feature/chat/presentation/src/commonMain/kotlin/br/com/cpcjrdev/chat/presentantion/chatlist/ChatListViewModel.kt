@@ -46,8 +46,8 @@ class ChatListViewModel(
 
     fun onAction(action: ChatListAction) {
         when (action) {
-            is ChatListAction.OnChatClick -> {
-                _state.value = _state.value.copy(selectedChatId = action.chat.id)
+            is ChatListAction.OnSelectChat -> {
+                _state.value = _state.value.copy(selectedChatId = action.chatId)
             }
 
             else -> {

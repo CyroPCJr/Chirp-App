@@ -1,7 +1,5 @@
 package br.com.cpcjrdev.chat.presentantion.chatlist
 
-import br.com.cpcjrdev.chat.presentantion.model.ChatUi
-
 sealed interface ChatListAction {
     data object OnUserAvatarClick : ChatListAction
 
@@ -17,7 +15,7 @@ sealed interface ChatListAction {
 
     data object OnProfileSettingsClick : ChatListAction
 
-    data class OnChatClick(
-        val chat: ChatUi,
+    data class OnSelectChat(
+        val chatId: String?,
     ) : ChatListAction
 }
