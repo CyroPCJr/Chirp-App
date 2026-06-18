@@ -21,5 +21,7 @@ interface MessageRepository {
     ): Result<List<ChatMessage>, DataError>
 
     suspend fun sendMessage(message: OutgoingNewMessage): EmptyResult<DataError>
+
+    suspend fun retryMessage(messageId: String) : EmptyResult<DataError>
     fun getMessagesForChat(chatId: String): Flow<List<MessageWithSender>>
 }

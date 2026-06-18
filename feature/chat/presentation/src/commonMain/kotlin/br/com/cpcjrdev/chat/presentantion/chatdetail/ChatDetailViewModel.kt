@@ -12,6 +12,7 @@ import br.com.cpcjrdev.chat.domain.message.MessageRepository
 import br.com.cpcjrdev.chat.domain.models.ConnectionState
 import br.com.cpcjrdev.chat.domain.models.OutgoingNewMessage
 import br.com.cpcjrdev.chat.presentantion.mappers.toUi
+import br.com.cpcjrdev.chat.presentantion.model.MessageUi
 import br.com.cpcjrdev.core.domain.auth.SessionStorage
 import br.com.cpcjrdev.core.domain.util.onFailure
 import br.com.cpcjrdev.core.domain.util.onSuccess
@@ -77,6 +78,7 @@ class ChatDetailViewModel(
 
             currentState.copy(
                 chatUi = chatInfo.chat.toUi(authInfo.user.id),
+                messages = chatInfo.messages.map { it.toUi(authInfo.user.id) }
             )
         }
 
@@ -129,11 +131,19 @@ class ChatDetailViewModel(
 
             is ChatDetailAction.OnMessageLongClick -> {}
 
-            is ChatDetailAction.OnRetryClick -> {}
+            is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
 
             ChatDetailAction.OnScrollToTop -> {}
 
             ChatDetailAction.OnSendMessageClick -> sendMessage()
+        }
+    }
+
+    private fun retryMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository.retryMessage(messageId = message.id).onFailure { error ->
+                eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+            }
         }
     }
 
@@ -161,6 +171,7 @@ class ChatDetailViewModel(
                 }
         }
     }
+
     private fun observeChatMessages() {
         val currentMessages = state
             .map { it.messages }
@@ -171,17 +182,6 @@ class ChatDetailViewModel(
                 messageRepository.getMessagesForChat(chatId)
             } else emptyFlow()
         }
-            .combine(sessionStorage.observeAuthInfo()) { messages, authInfo ->
-                if (authInfo == null) {
-                    return@combine messages
-                }
-                _state.update {
-                    it.copy(
-                        messages = messages.map { it.toUi(authInfo.user.id) }
-                    )
-                }
-                messages
-            }
 
         val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
 

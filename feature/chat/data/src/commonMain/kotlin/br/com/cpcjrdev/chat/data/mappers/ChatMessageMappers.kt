@@ -23,12 +23,12 @@ fun ChatMessageDto.toDomain(): ChatMessage =
 
 fun ChatMessageEntity.toDomain(): ChatMessage =
     ChatMessage(
-        id = chatId,
+        id = messageId,
         chatId = chatId,
         content = content,
         createdAt = Instant.fromEpochMilliseconds(timestamp),
         senderId = senderId,
-        deliveryStatus = ChatMessageDeliveryStatus.SENT,
+        deliveryStatus = ChatMessageDeliveryStatus.valueOf(deliveryStatus),
     )
 
 fun LastMessageView.toDomain(): ChatMessage =
