@@ -12,6 +12,7 @@ import br.com.cpcjrdev.chat.domain.message.MessageRepository
 import br.com.cpcjrdev.chat.domain.models.ConnectionState
 import br.com.cpcjrdev.chat.domain.models.OutgoingNewMessage
 import br.com.cpcjrdev.chat.presentantion.mappers.toUi
+import br.com.cpcjrdev.chat.presentantion.model.MessageUi
 import br.com.cpcjrdev.core.domain.auth.SessionStorage
 import br.com.cpcjrdev.core.domain.util.onFailure
 import br.com.cpcjrdev.core.domain.util.onSuccess
@@ -77,6 +78,7 @@ class ChatDetailViewModel(
 
             currentState.copy(
                 chatUi = chatInfo.chat.toUi(authInfo.user.id),
+                messages = chatInfo.messages.map { it.toUi(authInfo.user.id) }
             )
         }
 
@@ -92,7 +94,7 @@ class ChatDetailViewModel(
                 if (!hasLoadedInitialData) {
                     observeConnectionState()
                     observeChatMessages()
-                    //observeCanSendMessage()
+                    observeCanSendMessage()
                     hasLoadedInitialData = true
                 }
             }.stateIn(
@@ -103,37 +105,62 @@ class ChatDetailViewModel(
 
     fun onAction(action: ChatDetailAction) {
         when (action) {
-            is ChatDetailAction.OnSelectChat -> {
-                switchChat(action.chatId)
-            }
+            is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
 
             ChatDetailAction.OnBackClick -> {}
 
             ChatDetailAction.OnChatMembersClick -> {}
 
-            ChatDetailAction.OnChatOptionsClick -> {
-                onChatOptionsClick()
-            }
+            ChatDetailAction.OnChatOptionsClick -> onChatOptionsClick()
 
-            is ChatDetailAction.OnDeleteMessageClick -> {}
+            is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
 
-            ChatDetailAction.OnDismissChatOptions -> {
-                onDismissChatOptions()
-            }
+            ChatDetailAction.OnDismissChatOptions -> onDismissChatOptions()
 
-            ChatDetailAction.OnDismissMessageMenu -> {}
+            ChatDetailAction.OnDismissMessageMenu -> onDismissMessageMenu()
 
-            ChatDetailAction.OnLeaveChatClick -> {
-                onLeaveChatClick()
-            }
+            ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
 
-            is ChatDetailAction.OnMessageLongClick -> {}
+            is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
 
-            is ChatDetailAction.OnRetryClick -> {}
+            is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
 
             ChatDetailAction.OnScrollToTop -> {}
 
             ChatDetailAction.OnSendMessageClick -> sendMessage()
+        }
+    }
+
+    private fun onMessageLongClick(message: MessageUi.LocalUserMessage) {
+        _state.update {
+            it.copy(
+                messageWithOpenMenu = message
+            )
+        }
+    }
+
+    private fun onDismissMessageMenu() {
+        _state.update {
+            it.copy(
+                messageWithOpenMenu = null
+            )
+        }
+    }
+
+    private fun deleteMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository.deleteMessage(messageId = message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
+        }
+    }
+
+    private fun retryMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository.retryMessage(messageId = message.id).onFailure { error ->
+                eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+            }
         }
     }
 
@@ -161,6 +188,7 @@ class ChatDetailViewModel(
                 }
         }
     }
+
     private fun observeChatMessages() {
         val currentMessages = state
             .map { it.messages }
@@ -171,17 +199,6 @@ class ChatDetailViewModel(
                 messageRepository.getMessagesForChat(chatId)
             } else emptyFlow()
         }
-            .combine(sessionStorage.observeAuthInfo()) { messages, authInfo ->
-                if (authInfo == null) {
-                    return@combine messages
-                }
-                _state.update {
-                    it.copy(
-                        messages = messages.map { it.toUi(authInfo.user.id) }
-                    )
-                }
-                messages
-            }
 
         val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
 
@@ -216,6 +233,16 @@ class ChatDetailViewModel(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun observeCanSendMessage() {
+        canSendMessage.onEach { canSend ->
+            _state.update {
+                it.copy(
+                    canSendMessage = canSend
+                )
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun onLeaveChatClick() {

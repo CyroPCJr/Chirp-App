@@ -11,7 +11,6 @@ sealed class MessageUi(
         override val id: String,
         val content: String,
         val deliveryStatus: ChatMessageDeliveryStatus,
-        val isMenuOpen: Boolean,
         val formattedSentTime: UiText,
     ) : MessageUi(id)
 

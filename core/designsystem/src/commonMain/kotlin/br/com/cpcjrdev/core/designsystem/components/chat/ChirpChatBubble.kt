@@ -5,6 +5,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -76,7 +77,7 @@ fun ChirpChatBubble(
                         },
                     top = padding,
                     bottom = padding,
-                ),
+                ).width(IntrinsicSize.Max),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
@@ -117,7 +118,7 @@ fun ChirpChatBubbleLeftPreview() {
         ChirpChatBubble(
             messageContent =
                 "Hello world, this is a longer message that hopefully spans" +
-                    " over multiple lines so we can see how the preview would look like for that as well.",
+                        " over multiple lines so we can see how the preview would look like for that as well.",
             sender = "Philipp",
             formattedDateTime = "Friday 2:20pm",
             trianglePosition = TrianglePosition.LEFT,
@@ -133,7 +134,7 @@ fun ChirpChatBubbleRightPreview() {
         ChirpChatBubble(
             messageContent =
                 "Hello world, this is a longer message that hopefully spans" +
-                    " over multiple lines so we can see how the preview would look like for that as well.",
+                        " over multiple lines so we can see how the preview would look like for that as well.",
             sender = "Philipp",
             formattedDateTime = "Friday 2:20pm",
             trianglePosition = TrianglePosition.RIGHT,

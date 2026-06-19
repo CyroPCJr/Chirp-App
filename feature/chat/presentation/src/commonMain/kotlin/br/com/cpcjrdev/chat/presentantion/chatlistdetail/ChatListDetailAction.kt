@@ -1,7 +1,7 @@
 package br.com.cpcjrdev.chat.presentantion.chatlistdetail
 
 sealed interface ChatListDetailAction {
-    data class OnChatClick(
+    data class OnSelectChat(
         val chatId: String?,
     ) : ChatListDetailAction
 

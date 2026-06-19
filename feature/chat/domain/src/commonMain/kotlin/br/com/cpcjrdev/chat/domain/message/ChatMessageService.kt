@@ -2,6 +2,7 @@ package br.com.cpcjrdev.chat.domain.message
 
 import br.com.cpcjrdev.chat.domain.models.ChatMessage
 import br.com.cpcjrdev.core.domain.util.DataError
+import br.com.cpcjrdev.core.domain.util.EmptyResult
 import br.com.cpcjrdev.core.domain.util.Result
 
 interface ChatMessageService {
@@ -9,4 +10,6 @@ interface ChatMessageService {
         chatId: String,
         before: String? = null
     ): Result<List<ChatMessage>, DataError.Remote>
+
+    suspend fun deleteMessage(messageId: String): EmptyResult<DataError.Remote>
 }

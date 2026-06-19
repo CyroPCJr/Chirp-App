@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,10 +54,14 @@ import br.com.cpcjrdev.core.presentantion.util.currentDeviceConfiguration
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.no_chat_selected
 import chirp.feature.chat.presentation.generated.resources.select_a_chat
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -89,10 +94,14 @@ fun ChatDetailRoot(
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
 
+    val scope = rememberCoroutineScope()
     BackHandler(
         enabled = !isDetailPresent,
     ) {
-        viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+        scope.launch {
+            delay(300.milliseconds)
+            viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+        }
         onBack()
     }
 
@@ -124,7 +133,6 @@ fun ChatDetailScreen(
         modifier =
             Modifier
                 .fillMaxSize(),
-        contentWindowInsets = WindowInsets.safeDrawing,
         containerColor =
             if (!configuration.isWideScreen) {
                 MaterialTheme.colorScheme.surface
@@ -192,6 +200,7 @@ fun ChatDetailScreen(
                         }
                         MessageList(
                             messages = state.messages,
+                            messageWithOpenMenu = state.messageWithOpenMenu,
                             listState = messageListState,
                             onMessageLongClick = { message ->
                                 onAction(ChatDetailAction.OnMessageLongClick(message))
@@ -332,7 +341,7 @@ private fun ChatDetailMessagesPreview() {
                                     chatId = "1",
                                     content =
                                         "This is a last chat message that was sent by Philipp " +
-                                            "and goes over multiple lines to showcase the ellipsis",
+                                                "and goes over multiple lines to showcase the ellipsis",
                                     createdAt = Clock.System.now(),
                                     senderId = "1",
                                     deliveryStatus = ChatMessageDeliveryStatus.SENT,
@@ -346,7 +355,6 @@ private fun ChatDetailMessagesPreview() {
                                     id = Uuid.random().toString(),
                                     content = "Hello world!",
                                     deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                                    isMenuOpen = false,
                                     formattedSentTime = UiText.DynamicString("Friday, Aug 20"),
                                 )
                             } else {
