@@ -1,26 +1,24 @@
 package br.com.cpcjrdev.chat.presentantion.chatdetail.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.cpcjrdev.chat.domain.models.ChatMessageDeliveryStatus
 import br.com.cpcjrdev.chat.presentantion.model.MessageUi
 import br.com.cpcjrdev.core.designsystem.components.chat.ChirpChatBubble
 import br.com.cpcjrdev.core.designsystem.components.chat.TrianglePosition
+import br.com.cpcjrdev.core.designsystem.components.dropdown.ChirpDropDownMenu
+import br.com.cpcjrdev.core.designsystem.components.dropdown.DropDownItem
 import br.com.cpcjrdev.core.designsystem.theme.extended
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.delete_for_everyone
@@ -33,6 +31,7 @@ import org.jetbrains.compose.resources.vectorResource
 @Composable
 fun LocalUserMessage(
     message: MessageUi.LocalUserMessage,
+    messageWithOpenMenu: MessageUi.LocalUserMessage?,
     onMessageLongClick: () -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -62,31 +61,18 @@ fun LocalUserMessage(
                 },
             )
 
-            DropdownMenu(
-                expanded = message.isMenuOpen,
-                onDismissRequest = onDismissMessageMenu,
-                containerColor = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(8.dp),
-                border =
-                    BorderStroke(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.extended.surfaceOutline,
+            ChirpDropDownMenu(
+                isOpen = message.id == messageWithOpenMenu?.id,
+                onDismiss = onDismissMessageMenu,
+                items = listOf(
+                    DropDownItem(
+                        title = stringResource(Res.string.delete_for_everyone),
+                        icon = Icons.Default.Delete,
+                        contentColor = MaterialTheme.colorScheme.extended.destructiveHover,
+                        onClick = onDeleteClick
                     ),
-            ) {
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = stringResource(Res.string.delete_for_everyone),
-                            color = MaterialTheme.colorScheme.extended.destructiveHover,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    },
-                    onClick = {
-                        onDismissMessageMenu()
-                        onDeleteClick()
-                    },
                 )
-            }
+            )
         }
 
         if (message.deliveryStatus == ChatMessageDeliveryStatus.FAILED) {

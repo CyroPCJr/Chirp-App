@@ -94,7 +94,7 @@ class ChatDetailViewModel(
                 if (!hasLoadedInitialData) {
                     observeConnectionState()
                     observeChatMessages()
-                    //observeCanSendMessage()
+                    observeCanSendMessage()
                     hasLoadedInitialData = true
                 }
             }.stateIn(
@@ -105,37 +105,54 @@ class ChatDetailViewModel(
 
     fun onAction(action: ChatDetailAction) {
         when (action) {
-            is ChatDetailAction.OnSelectChat -> {
-                switchChat(action.chatId)
-            }
+            is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
 
             ChatDetailAction.OnBackClick -> {}
 
             ChatDetailAction.OnChatMembersClick -> {}
 
-            ChatDetailAction.OnChatOptionsClick -> {
-                onChatOptionsClick()
-            }
+            ChatDetailAction.OnChatOptionsClick -> onChatOptionsClick()
 
-            is ChatDetailAction.OnDeleteMessageClick -> {}
+            is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
 
-            ChatDetailAction.OnDismissChatOptions -> {
-                onDismissChatOptions()
-            }
+            ChatDetailAction.OnDismissChatOptions -> onDismissChatOptions()
 
-            ChatDetailAction.OnDismissMessageMenu -> {}
+            ChatDetailAction.OnDismissMessageMenu -> onDismissMessageMenu()
 
-            ChatDetailAction.OnLeaveChatClick -> {
-                onLeaveChatClick()
-            }
+            ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
 
-            is ChatDetailAction.OnMessageLongClick -> {}
+            is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
 
             is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
 
             ChatDetailAction.OnScrollToTop -> {}
 
             ChatDetailAction.OnSendMessageClick -> sendMessage()
+        }
+    }
+
+    private fun onMessageLongClick(message: MessageUi.LocalUserMessage) {
+        _state.update {
+            it.copy(
+                messageWithOpenMenu = message
+            )
+        }
+    }
+
+    private fun onDismissMessageMenu() {
+        _state.update {
+            it.copy(
+                messageWithOpenMenu = null
+            )
+        }
+    }
+
+    private fun deleteMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository.deleteMessage(messageId = message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
         }
     }
 
@@ -216,6 +233,16 @@ class ChatDetailViewModel(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun observeCanSendMessage() {
+        canSendMessage.onEach { canSend ->
+            _state.update {
+                it.copy(
+                    canSendMessage = canSend
+                )
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun onLeaveChatClick() {
